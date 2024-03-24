@@ -31,9 +31,9 @@ pub fn fibonacci_dy(n: i32) -> (i32, i32) {
 
 fn _fibonacci_tail(n: i32, a: i32, b: i32) -> i32 {
     if n == 0 {
-        return a;
+        a
     } else if n == 1 {
-        return b;
+        b
     } else {
         return _fibonacci_tail(n - 1, b, a + b);
     }
