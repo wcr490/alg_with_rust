@@ -32,14 +32,13 @@ impl RandGen {
 
 #[cfg(test)]
 mod test {
+    use crate::b_rand::rand;
+
     use super::RandGen;
 
     #[test]
     fn test_rand_generator() {
-        let mut r = RandGen::new(44);
-        for _ in 0..20 {
-            println!("rand: {}", r.next_v(10000000));
-        }
-        // panic!();
+        println!("rand: {}", rand(8));
+        panic!();
     }
 }

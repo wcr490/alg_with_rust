@@ -118,26 +118,12 @@ mod test {
     fn example_binary_tree() -> BinTree<i32> {
         let mut bt: BinTree<i32> = BinTree::new();
         bt.add_sorted(2);
-        bt.print_left_first(0);
-        println!("-------");
         bt.add_sorted(8);
-        bt.print_left_first(0);
-        println!("-------");
         bt.add_sorted(3);
-        bt.print_left_first(0);
-        println!("-------");
         bt.add_sorted(5);
-        bt.print_left_first(0);
-        println!("-------");
         bt.add_sorted(9);
-        bt.print_left_first(0);
-        println!("-------");
         bt.add_sorted(1);
-        bt.print_left_first(0);
-        println!("-------");
         bt.add_sorted(6);
-        bt.print_left_first(0);
-        println!("-------");
         bt
     }
 
