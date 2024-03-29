@@ -39,6 +39,6 @@ mod test {
     #[test]
     fn test_rand_generator() {
         println!("rand: {}", rand(8));
-        panic!();
+        // panic!();
     }
 }

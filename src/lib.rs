@@ -11,4 +11,7 @@ mod fibonacci;
 
 //storage
 mod binary_tree;
+mod graph;
+mod huffman_tree;
+mod route;
 mod skip_list;

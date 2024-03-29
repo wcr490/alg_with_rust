@@ -28,37 +28,37 @@ impl<T: PartialOrd> SkipNode<T> {
             data: rcc(t),
         }
     }
-    pub fn insert(&mut self, dt: T) -> Option<Rcc<SkipNode<T>>> {
+    pub fn insert(&mut self, data: T) -> Option<Rcc<SkipNode<T>>> {
         if let Some(ref right) = self.right {
-            if dt > *right.borrow().data.borrow() {
-                return right.borrow_mut().insert(dt);
+            if data > *right.borrow().data.borrow() {
+                return right.borrow_mut().insert(data);
             }
         }
-        if let Some(ref down) = self.down {
-            return match down.borrow_mut().insert(dt) {
-                Some(child) => match rand::random::<bool>() {
-                    true => {
-                        let dt = child.borrow().data.clone();
-                        let node = SkipNode {
-                            right: self.right.take(),
-                            data: dt,
-                            down: Some(child),
-                        };
-                        let res = rcc(node);
-                        self.right = Some(res.clone());
-                        Some(res)
-                    }
-                    false => None,
-                },
-                None => None,
-            };
-        }
-
-        let mut node = SkipNode::new(dt);
-        node.right = self.right.take();
-        let res = rcc(node);
-        self.right = Some(res.clone());
-        Some(res)
+        match self.down {
+            Some(ref child) => {
+                if rand::random::<bool>() {
+                    let node = SkipNode {
+                        right: self.right.take(),
+                        down: Some(child.clone()),
+                        data: child.borrow().data.clone(),
+                    };
+                    let res = rcc(node);
+                    self.right = Some(res.clone());
+                    Some(res)
+                } else {
+                    None
+                }
+            }
+            None => None,
+        };
+        let node = SkipNode {
+            right: self.right.take(),
+            down: None,
+            data: rcc(data),
+        };
+        let ret = rcc(node);
+        self.right = Some(ret.clone());
+        Some(ret)
     }
 }
 
@@ -73,36 +73,36 @@ impl<T: PartialOrd> SkipList<T> {
         }
         for i in (0..self.0.len()).rev() {
             if data > *self.0[i].data.borrow() {
-                if let Some(ch) = self.0[i].insert(data) {
-                    self.loop_up(ch, i + 1);
+                if let Some(child) = self.0[i].insert(data) {
+                    self.loop_up(child, i + 1);
                 }
                 return;
             }
         }
-
         let mut node = SkipNode::new(data);
         std::mem::swap(&mut node, &mut self.0[0]);
-        let res = rcc(node);
-        self.0[0].right = Some(res.clone());
-        self.loop_up(res, 1);
+        let ret = rcc(node);
+        self.0[0].right = Some(ret.clone());
+        self.loop_up(ret, 1);
     }
     pub fn loop_up(&mut self, ch: Rcc<SkipNode<T>>, n: usize) {
-        if rand::random::<bool>() == true {
+        if rand::random::<bool>() {
             return;
         }
-        let dt = ch.borrow().data.clone();
+        let data = ch.borrow().data.clone();
         let mut node = SkipNode {
             right: None,
             down: Some(ch),
-            data: dt,
+            data,
         };
         if n >= self.0.len() {
             self.0.push(node);
             return;
         }
         std::mem::swap(&mut node, &mut self.0[n]);
-        let res = rcc(node);
-        self.loop_up(res, n + 1);
+        let ret = rcc(node);
+        self.0[n].right = Some(ret.clone());
+        self.loop_up(ret, n + 1);
     }
 }
 
